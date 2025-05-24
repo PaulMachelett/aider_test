@@ -52,7 +52,7 @@ def create_note():
     })
     return jsonify({'message': 'Note created successfully', 'note_id': note_id}), 201
 
-@app.route('/notes/<int:note_i>', methods=['GET'])
+@app.route('/notes/<int:note_id>', methods=['GET'])
 def get_note(note_id):
     note = find_note_by_id(note_id)
     if note:
