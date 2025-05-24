@@ -1,4 +1,5 @@
-# CRUD-Logik für Notizen
+from app.models import notes_db
+from app.utils import find_note_by_id
 def create_note_in_db(note_data):
     note_id = len(notes_db) + 1
     notes_db.append({

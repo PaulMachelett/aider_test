@@ -1,4 +1,4 @@
-# Hilfsfunktionen
+from app.models import users_db, notes_db
 def find_user_by_email(email):
     return next((user for user in users_db if user['email'] == email), None)
 

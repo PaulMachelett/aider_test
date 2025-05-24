@@ -1,5 +1,7 @@
 from flask import request, jsonify
+from flask import current_app as app
 from app.crud import create_note_in_db, update_note_in_db, delete_note_in_db
+from app.models import users_db
 from app.utils import find_user_by_email, find_note_by_id
 
 # API-Routen
