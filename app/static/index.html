@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .section {
+            flex: 1;
+            min-width: 300px;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Notes API Tester</h1>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Register User</h2>
+            <form id="registerForm">
+                <label for="regName">Name:</label>
+                <input type="text" id="regName" required>
+                
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" required>
+                
+                <label for="regPassword">Password:</label>
+                <input type="password" id="regPassword" required>
+                
+                <button type="submit">Register</button>
+            </form>
+            <pre id="registerResult"></pre>
+        </div>
+        
+        <div class="section">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+                
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+                
+                <button type="submit">Login</button>
+            </form>
+            <pre id="loginResult"></pre>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Create Note</h2>
+            <form id="createNoteForm">
+                <label for="noteTitle">Title:</label>
+                <input type="text" id="noteTitle" required>
+                
+                <label for="noteContent">Content:</label>
+                <textarea id="noteContent" rows="4" required></textarea>
+                
+                <label for="noteOwnerId">Owner ID:</label>
+                <input type="number" id="noteOwnerId" required>
+                
+                <button type="submit">Create Note</button>
+            </form>
+            <pre id="createNoteResult"></pre>
+        </div>
+        
+        <div class="section">
+            <h2>Get Note</h2>
+            <form id="getNoteForm">
+                <label for="getNoteId">Note ID:</label>
+                <input type="number" id="getNoteId" required>
+                
+                <button type="submit">Get Note</button>
+            </form>
+            <pre id="getNoteResult"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Register User
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const result = document.getElementById('registerResult');
+            
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById('regName').value,
+                        email: document.getElementById('regEmail').value,
+                        password: document.getElementById('regPassword').value
+                    }),
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const result = document.getElementById('loginResult');
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: document.getElementById('loginEmail').value,
+                        password: document.getElementById('loginPassword').value
+                    }),
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        // Create Note
+        document.getElementById('createNoteForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const result = document.getElementById('createNoteResult');
+            
+            try {
+                const response = await fetch('/notes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: document.getElementById('noteTitle').value,
+                        content: document.getElementById('noteContent').value,
+                        owner_id: parseInt(document.getElementById('noteOwnerId').value)
+                    }),
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        });
+        
+        // Get Note
+        document.getElementById('getNoteForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const result = document.getElementById('getNoteResult');
+            const noteId = document.getElementById('getNoteId').value;
+            
+            try {
+                const response = await fetch(`/notes/${noteId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>

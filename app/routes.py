@@ -1,10 +1,29 @@
-from flask import request, jsonify
-from flask import current_app as app
+from flask import request, jsonify, send_from_directory
+from app import app
 from app.crud import create_note_in_db, update_note_in_db, delete_note_in_db
 from app.models import users_db
 from app.utils import find_user_by_email, find_note_by_id, find_user_by_id
 
 # API-Routen
+@app.route('/', methods=['GET'])
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/api', methods=['GET'])
+def api_info():
+    return jsonify({
+        'message': 'Welcome to the Notes API',
+        'endpoints': {
+            'POST /register': 'Register a new user',
+            'POST /login': 'Login with email and password',
+            'POST /notes': 'Create a new note',
+            'GET /notes/<note_id>': 'Get a specific note',
+            'PUT /notes/<note_id>': 'Update a specific note',
+            'DELETE /notes/<note_id>': 'Delete a specific note',
+            'DELETE /admin/delete_user/<user_id>': 'Delete a user (admin only)'
+        }
+    })
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
