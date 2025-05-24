@@ -6,7 +6,7 @@ def client():
     app.config['TESTING'] = True
     with app.app_context():
         with app.test_client() as client:
-        yield client
+            yield client
 
 def test_register_success(client):
     response = client.post('/register', json={
